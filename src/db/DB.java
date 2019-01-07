@@ -19,6 +19,7 @@ public class DB {
 				Properties props=loadProperties();
 				String url=props.getProperty("dburl");
 				conn=DriverManager.getConnection(url, props);
+				conn.setAutoCommit(false);
 			}catch(SQLException e) {
 				throw new DbException(e.getMessage());
 			}
@@ -54,6 +55,26 @@ public class DB {
 		}catch(SQLException e) {
 			throw new DbException(e.getMessage());
 		}	
+	}
+	
+	public static void commitTransaction() {
+		try{
+			if(conn!=null) {
+				conn.commit();
+			}
+		}catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+	}
+	
+	public static void rollbackTransaction() {
+		try {
+			if(conn!=null) {
+				conn.rollback();
+			}
+		}catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
 	}
 	
 	private static Properties loadProperties() {

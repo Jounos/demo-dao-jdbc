@@ -49,9 +49,11 @@ public class SellerDaoJDBC implements SellerDao{
 					s.setId(id);
 				}
 			}else {
+				DB.rollbackTransaction();
 				throw new DbException("Unexpected error! No rows affected!");
 			}
 		}catch(SQLException e) {
+			DB.rollbackTransaction();
 			throw new DbException(e.getMessage());
 		}finally {
 			DB.closeStatement(stm);
@@ -60,9 +62,32 @@ public class SellerDaoJDBC implements SellerDao{
 	}
 
 	@Override
-	public void update(Seller obj) {
-		// TODO Auto-generated method stub
-		
+	public void update(Seller s) {
+		PreparedStatement stm=null;
+		ResultSet rs=null;
+		try {
+			StringBuilder sql=new StringBuilder();
+			sql.append("UPDATE ");
+			sql.append("seller ");
+			sql.append("SET ");
+			sql.append("desc_name=?, email=?, birthdate=?, basesalary=?, departmentid=? ");
+			sql.append("WHERE ");
+			sql.append("id=? ");
+			stm=con.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
+			stm.setString(1, s.getName());
+			stm.setString(2, s.getEmail());
+			stm.setDate(3, new java.sql.Date(s.getBirthDate().getTime()));
+			stm.setDouble(4, s.getBaseSalary());
+			stm.setInt(5, s.getDepartment().getId());
+			stm.setInt(6, s.getId());
+			stm.executeUpdate();
+		}catch(SQLException e) {
+			DB.rollbackTransaction();
+			throw new DbException(e.getMessage());
+		}finally {
+			DB.closeStatement(stm);
+			DB.closeResutSet(rs);
+		}
 	}
 
 	@Override
