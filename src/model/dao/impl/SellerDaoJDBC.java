@@ -93,7 +93,6 @@ public class SellerDaoJDBC implements SellerDao{
 	@Override
 	public void deleteById(Integer id) {
 		PreparedStatement stm=null;
-		ResultSet rs=null;
 		try {
 			StringBuilder sql=new StringBuilder();
 			sql.append("DELETE FROM seller WHERE id=?");
@@ -201,11 +200,12 @@ public class SellerDaoJDBC implements SellerDao{
 			stm.setInt(1, department.getId());
 			rs=stm.executeQuery();
 			List<Seller> sellers=new ArrayList<>();
-			Map<Integer, Department> map=new HashMap();
+			Map<Integer, Department> map=new HashMap<>();
 			while(rs.next()) {
 				Department dep=map.get(rs.getInt("departmentid"));
 				if(dep==null) {
 					dep=instantiateDepartment(rs);
+					map.put(rs.getInt("departmentid"), dep);
 				}
 				sellers.add(instantiateSeller(rs, dep));
 			}

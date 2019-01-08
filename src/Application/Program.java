@@ -1,4 +1,4 @@
-package Application;
+package application;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -20,8 +20,8 @@ public class Program {
 		System.out.println(seller);
 		System.out.println();
 		System.out.println("**************************Teste 2: Seller findByDepartment**************************");
-		Department department=new Department(2, null);
-		List<Seller> sellers=sellerDAO.findByIdDepartment(department);
+		Department department = new Department(2, null);
+		List<Seller> sellers = sellerDAO.findByIdDepartment(department);
 		sellers.forEach(System.out::println);
 		System.out.println();
 		System.out.println("**************************Teste 3: Seller findAll**************************");
@@ -46,7 +46,8 @@ public class Program {
 		sellerDAO.deleteById(id);
 		System.out.println("Delete completed!");
 		sc.close();
-		
+
 		DB.commitTransaction();
+		//DB.rollbackTransaction();
 	}
 }
